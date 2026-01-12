@@ -1,0 +1,81 @@
+How to Connect GitHub to Jenkins Using Webhooks
+
+Goal:
+Whenever you push code to GitHub, Jenkins should automatically run your pipeline.
+
+--------------------------------------
+Step 1: Prepare Jenkins
+--------------------------------------
+1. Open Jenkins in browser:
+   http://<your-ec2-public-ip>:8080
+
+2. Open your job → Click "Configure"
+
+3. Under "Build Triggers", check:
+   [x] GitHub hook trigger for GITScm polling
+
+4. Save the job.
+
+--------------------------------------
+Step 2: Make Jenkins Public
+--------------------------------------
+Ensure your Jenkins is accessible from GitHub.
+
+- EC2 Security Group must allow inbound TCP 8080
+- Test in browser that Jenkins opens using the public IP
+
+--------------------------------------
+Step 3: Add Webhook in GitHub
+--------------------------------------
+1. Go to your GitHub repository.
+2. Click Settings → Webhooks → Add webhook.
+
+Fill in:
+
+Payload URL:
+http://<your-ec2-public-ip>:8080/github-webhook/
+
+Content type:
+application/json
+
+Which events?
+Just the push event.
+
+Active:
+Checked.
+
+Click "Add webhook".
+
+--------------------------------------
+Step 4: Test Webhook
+--------------------------------------
+1. On your local machine, edit any file.
+2. Commit and push:
+
+   git add .
+   git commit -m "test webhook"
+   git push
+
+--------------------------------------
+Step 5: Verify
+--------------------------------------
+- GitHub webhook should show a green tick.
+- Jenkins should automatically start a build.
+
+--------------------------------------
+Troubleshooting
+--------------------------------------
+1. If GitHub shows red cross:
+   - Check Jenkins URL is reachable from internet.
+   - Ensure /github-webhook/ is exactly correct.
+
+2. If Jenkins does not trigger:
+   - Check Jenkins system log.
+   - Ensure GitHub plugin is installed in Jenkins.
+
+--------------------------------------
+Summary
+--------------------------------------
+GitHub sends an HTTP POST request (webhook) to Jenkins when you push code.
+Jenkins receives it and triggers the pipeline automatically.
+
