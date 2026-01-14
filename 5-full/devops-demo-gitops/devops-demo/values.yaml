@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: john1436gilbert/devops-demo
+  tag: "1"
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5000
+
